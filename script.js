@@ -121,13 +121,15 @@ function initSocialLinks() {
 function showContactInfo() {
     const contactInfo = `
 連絡先情報:
-📧 Email: yu_ta20051021@icloud.com
-📱 Phone: 080-9735-2005
-📷 Instagram: @yuta223_6767
-💬 LINE: @tsutsumiyuta20051021
+📧 Email: hajime.dwv@gmail.com
+📱 Phone: 070-4112-5347
+📷 Instagram: @hajjy.no
+💬 LINE: @nhRH1UPm6H
+🌐 Facebook: https://www.facebook.com/share/17TrPiQD35/
+💼 LinkedIn: http://www.linkedin.com/in/hajimenn
     `.trim();
     
-    createCustomModal('堤祐太 - 連絡先情報', contactInfo);
+    createCustomModal('松本創 - 連絡先情報', contactInfo);
 }
 
 // カスタムモーダル作成
@@ -208,14 +210,17 @@ function downloadContact() {
     // vCard形式の連絡先情報を作成
     const vCardData = `BEGIN:VCARD
 VERSION:3.0
-FN:堤祐太
-ORG:近畿大学
-TITLE:経営学部キャリアマネジメント学科
-EMAIL:yu_ta20051021@icloud.com
-TEL:08097352005
-URL:https://www.instagram.com/yuta223_6767
-URL:https://line.me/ti/p/tsutsumiyuta20051021
-NOTE:学生団体ツナグ・HANZEON運営、よさこい社会人チーム『嘉們』正規メンバー、和太鼓全国大会優勝
+FN:松本創
+N:松本;創;;;
+ORG:同志社大学
+TITLE:経済学部2年・4DNR学生部リーダー
+EMAIL:hajime.dwv@gmail.com
+TEL:07041125347
+URL:https://www.instagram.com/hajjy.no
+URL:https://line.me/ti/p/nhRH1UPm6H
+URL:https://www.facebook.com/share/17TrPiQD35/
+URL:http://www.linkedin.com/in/hajimenn
+NOTE:学生プラットフォーム4DNR学生部リーダー、ワンダーフォーゲル部、オーストラリア1800km自転車旅
 END:VCARD`;
 
     // Blobオブジェクトを作成してダウンロード
@@ -224,7 +229,7 @@ END:VCARD`;
     
     const link = document.createElement('a');
     link.href = url;
-    link.download = '堤祐太.vcf';
+    link.download = '松本創.vcf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -233,7 +238,7 @@ END:VCARD`;
     window.URL.revokeObjectURL(url);
     
     // 成功メッセージ
-    showToast('堤祐太の連絡先がダウンロードされました！');
+    showToast('松本創の連絡先がダウンロードされました！');
 }
 
 // タブ切り替え機能
