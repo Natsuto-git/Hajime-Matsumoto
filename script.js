@@ -207,38 +207,65 @@ function createCustomModal(title, content) {
 
 // プロフィール画像をBase64エンコードする関数
 function getProfileImageBase64() {
-    try {
-        const profileImage = document.querySelector('.profile-image');
-        if (profileImage && profileImage.complete && profileImage.naturalWidth > 0) {
-            // 画像をキャンバスに描画してBase64に変換
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            // 画像のサイズを取得
-            const imgWidth = profileImage.naturalWidth;
-            const imgHeight = profileImage.naturalHeight;
-            
-            // キャンバスサイズを設定
-            canvas.width = imgWidth;
-            canvas.height = imgHeight;
-            
-            // 画像をキャンバスに描画
-            ctx.drawImage(profileImage, 0, 0, imgWidth, imgHeight);
-            
-            // Base64エンコードして返す
-            return canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+    return new Promise((resolve) => {
+        try {
+            const profileImage = document.querySelector('.profile-image');
+            if (profileImage) {
+                // 画像が既に読み込まれている場合
+                if (profileImage.complete && profileImage.naturalWidth > 0) {
+                    const base64 = encodeImageToBase64(profileImage);
+                    resolve(base64);
+                } else {
+                    // 画像の読み込みを待つ
+                    profileImage.onload = function() {
+                        const base64 = encodeImageToBase64(profileImage);
+                        resolve(base64);
+                    };
+                    profileImage.onerror = function() {
+                        console.error('画像の読み込みに失敗');
+                        resolve('');
+                    };
+                }
+            } else {
+                resolve('');
+            }
+        } catch (error) {
+            console.error('画像のBase64エンコードに失敗:', error);
+            resolve('');
         }
+    });
+}
+
+// 画像をBase64エンコードするヘルパー関数
+function encodeImageToBase64(img) {
+    try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // 画像のサイズを取得
+        const imgWidth = img.naturalWidth;
+        const imgHeight = img.naturalHeight;
+        
+        // キャンバスサイズを設定
+        canvas.width = imgWidth;
+        canvas.height = imgHeight;
+        
+        // 画像をキャンバスに描画
+        ctx.drawImage(img, 0, 0, imgWidth, imgHeight);
+        
+        // Base64エンコードして返す
+        return canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
     } catch (error) {
-        console.error('画像のBase64エンコードに失敗:', error);
+        console.error('画像のエンコードに失敗:', error);
+        return '';
     }
-    return '';
 }
 
 // 連絡先ダウンロード機能
-function downloadContact() {
+async function downloadContact() {
     try {
-        // プロフィール画像のBase64データを取得
-        const photoData = getProfileImageBase64();
+        // プロフィール画像のBase64データを取得（非同期）
+        const photoData = await getProfileImageBase64();
         
         // vCard形式の連絡先情報を作成
         let vCardData = `BEGIN:VCARD
