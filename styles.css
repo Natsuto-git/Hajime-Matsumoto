@@ -65,8 +65,8 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 200%;
-    height: 200%;
+    width: 185%;
+    height: 185%;
     object-fit: contain;
     transform: translate(-50%, -50%);
     opacity: 0.9;
@@ -90,15 +90,15 @@ body {
 }
 
 .logo-circle {
-    width: 120px;
-    height: 120px;
+    width: 144px;
+    height: 144px;
     background: rgba(255, 255, 255, 0.2);
     border: 3px solid rgba(0, 102, 204, 0.8);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 20px rgba(0, 102, 204, 0.6), 0 0 40px rgba(0, 102, 204, 0.4), 0 10px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 30px rgba(0, 102, 204, 0.8), 0 0 60px rgba(0, 102, 204, 0.6), 0 0 90px rgba(0, 102, 204, 0.4), 0 10px 30px rgba(0, 0, 0, 0.2);
     position: relative;
     margin-bottom: 10px;
     backdrop-filter: blur(10px);
@@ -486,8 +486,8 @@ body {
     }
     
     .logo-circle {
-        width: 80px;
-        height: 80px;
+        width: 96px;
+        height: 96px;
     }
     
     .logo-inner {
@@ -584,8 +584,8 @@ body {
     }
     
     .logo-circle {
-        width: 100px;
-        height: 100px;
+        width: 120px;
+        height: 120px;
     }
     
     .logo-inner {
@@ -650,8 +650,8 @@ body {
     }
     
     .logo-circle {
-        width: 120px;
-        height: 120px;
+        width: 144px;
+        height: 144px;
     }
     
     .logo-inner {
@@ -735,8 +735,8 @@ body {
     }
     
     .logo-circle {
-        width: 140px;
-        height: 140px;
+        width: 168px;
+        height: 168px;
     }
     
     .logo-inner {
