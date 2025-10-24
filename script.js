@@ -207,24 +207,41 @@ function createCustomModal(title, content) {
 
 // プロフィール画像をBase64エンコードする関数
 function getProfileImageBase64() {
-    const profileImage = document.querySelector('.profile-image');
-    if (profileImage) {
-        // 画像をキャンバスに描画してBase64に変換
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = profileImage.naturalWidth || 200;
-        canvas.height = profileImage.naturalHeight || 200;
-        
-        ctx.drawImage(profileImage, 0, 0, canvas.width, canvas.height);
-        return canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+    try {
+        const profileImage = document.querySelector('.profile-image');
+        if (profileImage && profileImage.complete && profileImage.naturalWidth > 0) {
+            // 画像をキャンバスに描画してBase64に変換
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // 画像のサイズを取得
+            const imgWidth = profileImage.naturalWidth;
+            const imgHeight = profileImage.naturalHeight;
+            
+            // キャンバスサイズを設定
+            canvas.width = imgWidth;
+            canvas.height = imgHeight;
+            
+            // 画像をキャンバスに描画
+            ctx.drawImage(profileImage, 0, 0, imgWidth, imgHeight);
+            
+            // Base64エンコードして返す
+            return canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+        }
+    } catch (error) {
+        console.error('画像のBase64エンコードに失敗:', error);
     }
     return '';
 }
 
 // 連絡先ダウンロード機能
 function downloadContact() {
-    // vCard形式の連絡先情報を作成
-    const vCardData = `BEGIN:VCARD
+    try {
+        // プロフィール画像のBase64データを取得
+        const photoData = getProfileImageBase64();
+        
+        // vCard形式の連絡先情報を作成
+        let vCardData = `BEGIN:VCARD
 VERSION:3.0
 FN:松本創
 N:松本;創;;;
@@ -235,27 +252,37 @@ TEL:07041125347
 URL:https://www.instagram.com/hajjy.no
 URL:https://line.me/ti/p/nhRH1UPm6H
 URL:https://www.facebook.com/share/17TrPiQD35/
-URL:http://www.linkedin.com/in/hajimenn
-PHOTO;TYPE=JPEG;ENCODING=BASE64:${getProfileImageBase64()}
-NOTE:学生プラットフォーム4DNR学生部リーダー、ワンダーフォーゲル部、オーストラリア1800km自転車旅
+URL:http://www.linkedin.com/in/hajimenn`;
+
+        // 画像データがある場合のみ追加
+        if (photoData) {
+            vCardData += `\nPHOTO;TYPE=JPEG;ENCODING=BASE64:${photoData}`;
+        }
+
+        vCardData += `\nNOTE:学生プラットフォーム4DNR学生部リーダー、ワンダーフォーゲル部、オーストラリア1800km自転車旅
 END:VCARD`;
 
-    // Blobオブジェクトを作成してダウンロード
-    const blob = new Blob([vCardData], { type: 'text/vcard' });
-    const url = window.URL.createObjectURL(blob);
-    
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = '松本創.vcf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    // メモリリークを防ぐ
-    window.URL.revokeObjectURL(url);
-    
-    // 成功メッセージ
-    showToast('松本創の連絡先がダウンロードされました！');
+        // Blobオブジェクトを作成してダウンロード
+        const blob = new Blob([vCardData], { type: 'text/vcard' });
+        const url = window.URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = '松本創.vcf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // メモリリークを防ぐ
+        window.URL.revokeObjectURL(url);
+        
+        // 成功メッセージ
+        showToast('松本創の連絡先がダウンロードされました！');
+        
+    } catch (error) {
+        console.error('連絡先ダウンロードに失敗:', error);
+        showToast('連絡先のダウンロードに失敗しました。もう一度お試しください。');
+    }
 }
 
 // タブ切り替え機能
