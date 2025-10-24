@@ -205,6 +205,22 @@ function createCustomModal(title, content) {
     document.head.appendChild(style);
 }
 
+// プロフィール画像をBase64エンコードする関数
+function getProfileImageBase64() {
+    const profileImage = document.querySelector('.profile-image');
+    if (profileImage) {
+        // 画像をキャンバスに描画してBase64に変換
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = profileImage.naturalWidth || 200;
+        canvas.height = profileImage.naturalHeight || 200;
+        
+        ctx.drawImage(profileImage, 0, 0, canvas.width, canvas.height);
+        return canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+    }
+    return '';
+}
+
 // 連絡先ダウンロード機能
 function downloadContact() {
     // vCard形式の連絡先情報を作成
@@ -220,6 +236,7 @@ URL:https://www.instagram.com/hajjy.no
 URL:https://line.me/ti/p/nhRH1UPm6H
 URL:https://www.facebook.com/share/17TrPiQD35/
 URL:http://www.linkedin.com/in/hajimenn
+PHOTO;TYPE=JPEG;ENCODING=BASE64:${getProfileImageBase64()}
 NOTE:学生プラットフォーム4DNR学生部リーダー、ワンダーフォーゲル部、オーストラリア1800km自転車旅
 END:VCARD`;
 
