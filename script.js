@@ -210,23 +210,44 @@ function getProfileImageBase64() {
     return new Promise((resolve) => {
         try {
             const profileImage = document.querySelector('.profile-image');
+            console.log('プロフィール画像要素:', profileImage);
+            
             if (profileImage) {
+                console.log('画像の読み込み状態:', {
+                    complete: profileImage.complete,
+                    naturalWidth: profileImage.naturalWidth,
+                    naturalHeight: profileImage.naturalHeight,
+                    src: profileImage.src
+                });
+                
                 // 画像が既に読み込まれている場合
                 if (profileImage.complete && profileImage.naturalWidth > 0) {
+                    console.log('画像は既に読み込まれています');
                     const base64 = encodeImageToBase64(profileImage);
+                    console.log('Base64データの長さ:', base64.length);
                     resolve(base64);
                 } else {
+                    console.log('画像の読み込みを待機中...');
                     // 画像の読み込みを待つ
                     profileImage.onload = function() {
+                        console.log('画像の読み込み完了');
                         const base64 = encodeImageToBase64(profileImage);
+                        console.log('Base64データの長さ:', base64.length);
                         resolve(base64);
                     };
                     profileImage.onerror = function() {
-                        console.error('画像の読み込みに失敗');
+                        console.error('画像の読み込みに失敗:', profileImage.src);
                         resolve('');
                     };
+                    
+                    // タイムアウトを設定（5秒）
+                    setTimeout(() => {
+                        console.log('画像読み込みタイムアウト');
+                        resolve('');
+                    }, 5000);
                 }
             } else {
+                console.error('プロフィール画像要素が見つかりません');
                 resolve('');
             }
         } catch (error) {
@@ -239,6 +260,12 @@ function getProfileImageBase64() {
 // 画像をBase64エンコードするヘルパー関数
 function encodeImageToBase64(img) {
     try {
+        console.log('画像エンコード開始:', {
+            naturalWidth: img.naturalWidth,
+            naturalHeight: img.naturalHeight,
+            src: img.src
+        });
+        
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         
@@ -246,15 +273,32 @@ function encodeImageToBase64(img) {
         const imgWidth = img.naturalWidth;
         const imgHeight = img.naturalHeight;
         
+        if (imgWidth === 0 || imgHeight === 0) {
+            console.error('画像サイズが0です');
+            return '';
+        }
+        
         // キャンバスサイズを設定
         canvas.width = imgWidth;
         canvas.height = imgHeight;
         
+        console.log('キャンバスサイズ設定:', canvas.width, 'x', canvas.height);
+        
         // 画像をキャンバスに描画
         ctx.drawImage(img, 0, 0, imgWidth, imgHeight);
         
+        console.log('画像をキャンバスに描画完了');
+        
         // Base64エンコードして返す
-        return canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+        const dataURL = canvas.toDataURL('image/jpeg', 0.8);
+        const base64 = dataURL.split(',')[1];
+        
+        console.log('Base64エンコード完了:', {
+            dataURL長: dataURL.length,
+            base64長: base64.length
+        });
+        
+        return base64;
     } catch (error) {
         console.error('画像のエンコードに失敗:', error);
         return '';
